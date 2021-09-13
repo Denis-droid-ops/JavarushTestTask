@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "player" , schema = "rpg")
+@Table(name = "player")
 
 public class Player {
     @Id
@@ -24,6 +24,10 @@ public class Player {
     private Integer untilNextLevel;
     private Date birthday;
     private Boolean banned;
+
+    public Player(){
+
+    }
 
     public Long getId() {
         return id;

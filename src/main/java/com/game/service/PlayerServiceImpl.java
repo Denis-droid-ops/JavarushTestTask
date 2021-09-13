@@ -27,6 +27,9 @@ public class PlayerServiceImpl implements PlayerService{
 
     @Override
     public Player getById(Long id) {
+        if(!playerRepository.existsById(id)){
+            throw new NotFoundException();
+        }else
         return playerRepository.findById(id).orElse(null);
     }
 
@@ -148,25 +151,28 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public double computeLevel(Player player) {
-        double level = (Math.sqrt(2500+200*player.getExperience())-50)/100;
+    public int computeLevel(Player player) {
+        int level = (int)(Math.sqrt(2500+200*player.getExperience())-50)/100;
         return level;
     }
 
     @Override
-    public double computeUntilNextLevel(Player player) {
-        double untilNextLevel = 50*(player.getLevel()+1)*(player.getLevel()+2)-player.getExperience();
+    public int computeUntilNextLevel(Player player) {
+        int untilNextLevel = 50*(player.getLevel()+1)*(player.getLevel()+2)-player.getExperience();
         return untilNextLevel;
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public Player updatePlayer(Player player, Long id) {
+        if(!playerRepository.existsById(id)){
+           throw new NotFoundException();
+        }
         Player playerToUpdate = playerRepository.findById(id).get();
-
-       if(player == null || playerToUpdate == null){
+        if(player==null){
             throw new BadRequestException();
         }
+
         if(player.getName()!=null){
             if(player.getName().isEmpty() || player.getName().length()>12){
                 throw new BadRequestException();
@@ -209,8 +215,13 @@ public class PlayerServiceImpl implements PlayerService{
             playerToUpdate.setBanned(player.getBanned());
         }
 
-        playerToUpdate.setLevel((int)Math.round(computeLevel(playerToUpdate)));
-        playerToUpdate.setUntilNextLevel((int)Math.round(computeUntilNextLevel(playerToUpdate)));
+       // if(player.getLevel()!=null) {
+            playerToUpdate.setLevel(computeLevel(playerToUpdate));
+            playerToUpdate.setUntilNextLevel(computeUntilNextLevel(playerToUpdate));
+
+
+       // }
+
 
         return playerRepository.save(playerToUpdate);
     }

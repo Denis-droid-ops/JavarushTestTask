@@ -2,6 +2,7 @@ package com.game.controller;
 
 
 import com.game.BadRequestException;
+import com.game.NotFoundException;
 import com.game.entity.Player;
 import com.game.entity.Profession;
 import com.game.entity.Race;
@@ -88,17 +89,22 @@ public class PlayerRestController {
     @PostMapping("/rest/players/{id}")
     @ResponseBody
     public Player updatePlayer(@RequestBody Player player, @PathVariable Long id){
-        if (!playerService.isValidId(id)) {
-            throw new BadRequestException();
-        }
-        return playerService.updatePlayer(player,id);
+
+            if (!playerService.isValidId(id)) {
+                throw new BadRequestException();
+            }
+            return playerService.updatePlayer(player, id);
+
     }
 
     @DeleteMapping("/rest/players/{id}")
     public void deletePlayer(@PathVariable Long id){
+
         if (!playerService.isValidId(id)) {
             throw new BadRequestException();
         }
+
         playerService.delete(id);
+
     }
 }

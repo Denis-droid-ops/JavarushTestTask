@@ -22,12 +22,14 @@ public interface PlayerService {
                                         Integer pageSize);
     Comparator<Player> getComparator(PlayerOrder order);
 
-    double computeLevel(Player player);
+    int computeLevel(Player player);
 
-    double computeUntilNextLevel(Player player);
+    int computeUntilNextLevel(Player player);
 
     Player updatePlayer(Player player, Long id);
 
     boolean isValidId(Long id);
+
+
 
 }
